@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>APIs — Cheat Sheet</title>
+<link rel="icon" type="image/svg+xml" href="../assets/ico/favicon.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/ico/favicon-32.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:       #0f1320;
+    --surface:  #161b29;
+    --surface2: #1c2233;
+    --border:   rgba(255,255,255,.10);
+    --border2:  rgba(255,255,255,.16);
+
+    --get:    #18c9a9;
+    --post:   #5b82ff;
+    --put:    #4dd0ff;
+    --patch:  #9b6bff;
+    --delete: #ff6b60;
+    --head:   #18c9a9;
+
+    --text:   #e8ecf3;
+    --muted:  #8e96ab;
+    --accent: #5b82ff;
+
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Hanken Grotesk', sans-serif;
+    --display: 'Bricolage Grotesque', sans-serif;
+
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 32px 24px 48px;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── FONDO ANIMADO (igual que el portafolio) ─── */
+  .mesh { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .3; animation: float 18s ease-in-out infinite; }
+  .blob.a { width: 520px; height: 520px; background: var(--post);  top: -120px; left: -80px; }
+  .blob.b { width: 460px; height: 460px; background: var(--get);   top: 30%; right: -120px; animation-delay: -6s; }
+  .blob.c { width: 400px; height: 400px; background: var(--put);   bottom: -100px; left: 20%; animation-delay: -11s; }
+  @keyframes float {
+    0%,100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(40px,-50px) scale(1.1); }
+    66% { transform: translate(-30px,40px) scale(.95); }
+  }
+  .grain {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ─── GRID ─── */
+  .sheet {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 20px;
+  }
+  header h1 {
+    font-family: var(--display);
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    color: var(--text);
+  }
+  header h1 span {
+    background: linear-gradient(110deg, var(--post), var(--get) 55%, var(--put));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  header p {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  /* ─── SECTION TITLE ─── */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    padding-left: 2px;
+  }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    height: 100%;
+    transition: transform .2s, box-shadow .2s, border-color .2s;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(0,0,0,.45);
+    border-color: rgba(255,255,255,.16);
+  }
+  .card h3 {
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -.2px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  /* ─── LAYOUT GRID ─── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+  .col-span-2 { grid-column: span 2; }
+  .col-span-3 { grid-column: span 3; }
+  .col-span-4 { grid-column: span 4; }
+
+  .section { margin-bottom: 22px; }
+
+  /* ─── MÉTODO BADGE ─── */
+  .method {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+  }
+  .m-get    { background: #18c9a920; color: var(--get);    border: 1px solid #18c9a940; }
+  .m-post   { background: #5b82ff20; color: var(--post);   border: 1px solid #5b82ff40; }
+  .m-put    { background: #4dd0ff20; color: var(--put);    border: 1px solid #4dd0ff40; }
+  .m-patch  { background: #9b6bff20; color: var(--patch);  border: 1px solid #9b6bff40; }
+  .m-delete { background: #ff6b6020; color: var(--delete); border: 1px solid #ff6b6040; }
+  .m-head   { background: #18c9a920; color: var(--head);   border: 1px solid #18c9a940; }
+
+  /* ─── HTTP METHODS TABLE ─── */
+  .methods-table { width: 100%; border-collapse: collapse; }
+  .methods-table tr { border-bottom: 1px solid var(--border); }
+  .methods-table tr:last-child { border-bottom: none; }
+  .methods-table td {
+    padding: 7px 4px;
+    font-size: 12px;
+    vertical-align: middle;
+  }
+  .methods-table td:first-child { width: 68px; }
+  .methods-table td:nth-child(2) {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    width: 60px;
+    text-align: center;
+  }
+  .methods-table td:last-child { color: #aab2c6; }
+  .safe-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  /* ─── CODE BLOCK ─── */
+  .code {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 13px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    line-height: 1.65;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .code .kw   { color: #5b82ff; }
+  .code .str  { color: #5cd6b0; }
+  .code .num  { color: #4dd0ff; }
+  .code .key  { color: #9b6bff; }
+  .code .op   { color: var(--muted); }
+  .code .cmt  { color: #5b6a8c; font-style: italic; }
+
+  /* ─── STATUS CODES ─── */
+  .status-group { margin-bottom: 10px; }
+  .status-group-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .status-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 3.5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .status-row:last-child { border-bottom: none; }
+  .status-code {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 12px;
+    min-width: 34px;
+  }
+  .s-2 { color: var(--get); }
+  .s-3 { color: #4dd0ff; }
+  .s-4 { color: var(--put); }
+  .s-5 { color: var(--delete); }
+  .status-desc { color: #aab2c6; }
+
+  /* ─── AUTH METHODS ─── */
+  .auth-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 7px;
+  }
+  .auth-item:last-child { margin-bottom: 0; }
+  .auth-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .auth-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: #232a3d;
+    color: var(--muted);
+  }
+  .auth-desc { font-size: 11px; color: var(--muted); }
+
+  /* ─── ANATOMY ─── */
+  .url-anatomy {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    align-items: center;
+    line-height: 2.2;
+  }
+  .url-part { position: relative; display: inline-block; }
+  .url-part span { border-radius: 3px; padding: 1px 2px; }
+  .u-scheme  span { color: #ff6b60; background: #ff6b6015; }
+  .u-host    span { color: #5b82ff; background: #5b82ff15; }
+  .u-version span { color: #4dd0ff; background: #4dd0ff15; }
+  .u-res     span { color: #18c9a9; background: #18c9a915; }
+  .u-param   span { color: #9b6bff; background: #9b6bff15; }
+  .u-sep     { color: var(--muted); }
+
+  .url-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .url-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .url-dot {
+    width: 8px; height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ─── RESTVSGRPHQL ─── */
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    font-size: 11.5px;
+    border-bottom: 1px solid var(--border);
+    padding: 6px 0;
+    align-items: start;
+  }
+  .compare-row:last-child { border-bottom: none; }
+  .compare-label { color: var(--muted); }
+  .compare-rest  { color: #5b82ff; }
+  .compare-gql   { color: #9b6bff; }
+  .compare-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 6px;
+    margin-bottom: 4px;
+  }
+
+  /* ─── PILLARS ─── */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .pillar {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 11px;
+    text-align: center;
+  }
+  .pillar-icon { font-size: 20px; margin-bottom: 5px; }
+  .pillar-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .pillar-desc { font-size: 10.5px; color: var(--muted); }
+
+  /* ─── HEADER TABLE ─── */
+  .header-table { width: 100%; }
+  .header-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 11.5px;
+    border-bottom: 1px solid var(--border);
+    padding: 5px 0;
+  }
+  .header-row:last-child { border-bottom: none; }
+  .header-name { font-family: var(--mono); color: var(--accent); font-size: 11px; }
+  .header-desc { color: var(--muted); }
+
+  /* ─── FLOW DIAGRAM ─── */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    padding: 4px 0;
+  }
+  .flow-step {
+    flex-shrink: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 11px;
+    text-align: center;
+    min-width: 90px;
+  }
+  .flow-step .fs-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+  .flow-step .fs-name { font-size: 10.5px; font-weight: 700; color: var(--text); display: block; }
+  .flow-step .fs-sub  { font-size: 9.5px; color: var(--muted); display: block; margin-top: 1px; }
+  .flow-arrow {
+    color: var(--muted);
+    font-size: 16px;
+    padding: 0 5px;
+    flex-shrink: 0;
+  }
+
+  /* ─── TAG CHIPS ─── */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--muted);
+  }
+  .chip-hl { color: var(--accent); border-color: #5b82ff30; background: #5b82ff10; }
+
+  /* ─── FOOTBAR ─── */
+  footer {
+    margin-top: 28px;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--mono);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer span { color: var(--accent); }
+
+  /* ─── ACCENT LINE ─── */
+  .accent-bar {
+    height: 4px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 700px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .col-span-2, .col-span-3, .col-span-4 { grid-column: span 1; }
+    .compare-header, .compare-row { grid-template-columns: 1fr; }
+    .pillars { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="mesh"><div class="blob a"></div><div class="blob b"></div><div class="blob c"></div></div>
+<div class="grain"></div>
+<div class="sheet">
+
+  <!-- VOLVER -->
+  <a href="../index.html" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--muted);text-decoration:none;margin-bottom:18px;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">← Volver al portafolio</a>
+
+  <!-- HEADER -->
+  <header>
+    <h1>API<span>s</span> — Cheat Sheet</h1>
+    <p>// Referencia rápida · REST · HTTP · Auth · Status Codes</p>
+  </header>
+
+  <!-- ROW 1: Anatomy + HTTP Methods -->
+  <div class="section">
+    <div class="grid-2" style="align-items:start">
+
+      <!-- ANATOMY OF A URL -->
+      <div class="card">
+        <div class="accent-bar" style="background: linear-gradient(90deg,#5b82ff,#9b6bff)"></div>
+        <h3>Anatomía de una URL REST</h3>
+        <div class="url-anatomy">
+          <span class="url-part u-scheme"><span>https</span></span>
+          <span class="u-sep">://</span>
+          <span class="url-part u-host"><span>api.ejemplo.com</span></span>
+          <span class="u-sep">/</span>
+          <span class="url-part u-version"><span>v1</span></span>
+          <span class="u-sep">/</span>
+          <span class="url-part u-res"><span>usuarios</span></span>
+          <span class="u-sep">/</span>
+          <span class="url-part u-res"><span>42</span></span>
+          <span class="u-sep">/</span>
+          <span class="url-part u-res"><span>pedidos</span></span>
+          <span class="u-sep">?</span>
+          <span class="url-part u-param"><span>pagina=1</span></span>
+          <span class="u-sep">&amp;</span>
+          <span class="url-part u-param"><span>limite=20</span></span>
+        </div>
+        <div class="url-legend">
+          <div class="url-legend-item"><div class="url-dot" style="background:#ff6b60"></div> Esquema</div>
+          <div class="url-legend-item"><div class="url-dot" style="background:#5b82ff"></div> Host</div>
+          <div class="url-legend-item"><div class="url-dot" style="background:#4dd0ff"></div> Versión</div>
+          <div class="url-legend-item"><div class="url-dot" style="background:#18c9a9"></div> Recursos</div>
+          <div class="url-legend-item"><div class="url-dot" style="background:#9b6bff"></div> Query params</div>
+        </div>
+      </div>
+
+      <!-- HTTP METHODS -->
+      <div class="card">
+        <div class="accent-bar" style="background: linear-gradient(90deg,#18c9a9,#5b82ff,#4dd0ff,#9b6bff,#ff6b60)"></div>
+        <h3>Métodos HTTP</h3>
+        <table class="methods-table">
+          <tbody>
+            <tr>
+              <td><span class="method m-get">GET</span></td>
+              <td><span style="color:#18c9a980">idempotente</span></td>
+              <td>Obtener recurso(s). Sin cuerpo.</td>
+            </tr>
+            <tr>
+              <td><span class="method m-post">POST</span></td>
+              <td><span style="color:#6b7694">—</span></td>
+              <td>Crear nuevo recurso.</td>
+            </tr>
+            <tr>
+              <td><span class="method m-put">PUT</span></td>
+              <td><span style="color:#4dd0ff80">idempotente</span></td>
+              <td>Reemplazar recurso completo.</td>
+            </tr>
+            <tr>
+              <td><span class="method m-patch">PATCH</span></td>
+              <td><span style="color:#6b7694">—</span></td>
+              <td>Modificar campos específicos.</td>
+            </tr>
+            <tr>
+              <td><span class="method m-delete">DELETE</span></td>
+              <td><span style="color:#ff6b6080">idempotente</span></td>
+              <td>Eliminar recurso.</td>
+            </tr>
+            <tr>
+              <td><span class="method m-head">HEAD</span></td>
+              <td><span style="color:#18c9a980">seguro</span></td>
+              <td>Como GET, solo cabeceras.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 2: Req/Res + Status Codes + Auth -->
+  <div class="section">
+    <div class="grid-3" style="align-items:start">
+
+      <!-- REQUEST / RESPONSE -->
+      <div class="card">
+        <div class="accent-bar" style="background: linear-gradient(90deg,#5b82ff,#18c9a9)"></div>
+        <h3>Petición → Respuesta</h3>
+        <!-- Request -->
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5b82ff;margin-bottom:5px">Petición (Request)</div>
+        <div class="code" style="margin-bottom:10px"><span class="kw">POST</span> /v1/usuarios HTTP/1.1
+<span class="key">Host:</span>         <span class="str">api.ejemplo.com</span>
+<span class="key">Authorization:</span> <span class="str">Bearer &lt;token&gt;</span>
+<span class="key">Content-Type:</span> <span class="str">application/json</span>
+
+{
+  <span class="key">"nombre"</span><span class="op">:</span> <span class="str">"Ana García"</span><span class="op">,</span>
+  <span class="key">"email"</span><span class="op">:</span>  <span class="str">"ana@mail.com"</span>
+}</div>
+        <!-- Response -->
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#18c9a9;margin-bottom:5px">Respuesta (Response)</div>
+        <div class="code"><span class="num">HTTP/1.1 201 Created</span>
+<span class="key">Content-Type:</span> <span class="str">application/json</span>
+
+{
+  <span class="key">"id"</span><span class="op">:</span>      <span class="num">8421</span><span class="op">,</span>
+  <span class="key">"nombre"</span><span class="op">:</span> <span class="str">"Ana García"</span><span class="op">,</span>
+  <span class="key">"creado"</span><span class="op">:</span> <span class="str">"2026-05-28"</span>
+}</div>
+      </div>
+
+      <!-- STATUS CODES -->
+      <div class="card">
+        <div class="accent-bar" style="background: linear-gradient(90deg,#18c9a9,#4dd0ff,#4dd0ff,#ff6b60)"></div>
+        <h3>Códigos de Estado</h3>
+
+        <div class="status-group">
+          <div class="status-group-title">2xx — Éxito</div>
+          <div class="status-row"><span class="status-code s-2">200</span><span class="status-desc">OK — solicitud exitosa</span></div>
+          <div class="status-row"><span class="status-code s-2">201</span><span class="status-desc">Created — recurso creado</span></div>
+          <div class="status-row"><span class="status-code s-2">204</span><span class="status-desc">No Content — sin cuerpo</span></div>
+        </div>
+        <div class="status-group">
+          <div class="status-group-title">3xx — Redirección</div>
+          <div class="status-row"><span class="status-code s-3">301</span><span class="status-desc">Moved Permanently</span></div>
+          <div class="status-row"><span class="status-code s-3">304</span><span class="status-desc">Not Modified (caché)</span></div>
+        </div>
+        <div class="status-group">
+          <div class="status-group-title">4xx — Error del cliente</div>
+          <div class="status-row"><span class="status-code s-4">400</span><span class="status-desc">Bad Request — datos inválidos</span></div>
+          <div class="status-row"><span class="status-code s-4">401</span><span class="status-desc">Unauthorized — sin auth</span></div>
+          <div class="status-row"><span class="status-code s-4">403</span><span class="status-desc">Forbidden — sin permisos</span></div>
+          <div class="status-row"><span class="status-code s-4">404</span><span class="status-desc">Not Found — no existe</span></div>
+          <div class="status-row"><span class="status-code s-4">429</span><span class="status-desc">Too Many Requests — rate limit</span></div>
+        </div>
+        <div class="status-group">
+          <div class="status-group-title">5xx — Error del servidor</div>
+          <div class="status-row"><span class="status-code s-5">500</span><span class="status-desc">Internal Server Error</span></div>
+          <div class="status-row"><span class="status-code s-5">502</span><span class="status-desc">Bad Gateway</span></div>
+          <div class="status-row"><span class="status-code s-5">503</span><span class="status-desc">Service Unavailable</span></div>
+        </div>
+      </div>
+
+      <!-- AUTH -->
+      <div class="card">
+        <div class="accent-bar" style="background: linear-gradient(90deg,#4dd0ff,#9b6bff)"></div>
+        <h3>Autenticación</h3>
+
+        <div class="auth-item">
+          <div class="auth-name">API Key <span class="auth-tag">simple</span></div>
+          <div class="auth-desc">Clave fija en cabecera o query param. Fácil de implementar, difícil de rotar.</div>
+          <div class="code" style="margin-top:5px;font-size:10.5px"><span class="key">X-API-Key:</span> <span class="str">sk_live_abc123</span></div>
+        </div>
+
+        <div class="auth-item">
+          <div class="auth-name">Bearer / JWT <span class="auth-tag">recomendado</span></div>
+          <div class="auth-desc">Token firmado con header.payload.signature. Expira y es sin estado.</div>
+          <div class="code" style="margin-top:5px;font-size:10.5px"><span class="key">Authorization:</span> <span class="str">Bearer eyJhbG...</span></div>
+        </div>
+
+        <div class="auth-item">
+          <div class="auth-name">OAuth 2.0 <span class="auth-tag">delegado</span></div>
+          <div class="auth-desc">Flujo de autorización con access_token + refresh_token. Estándar para apps de terceros.</div>
+        </div>
+
+        <div class="auth-item">
+          <div class="auth-name">Basic Auth <span class="auth-tag">evitar</span></div>
+          <div class="auth-desc">user:pass en Base64. Solo con HTTPS. No recomendado en producción.</div>
+          <div class="code" style="margin-top:5px;font-size:10.5px"><span class="key">Authorization:</span> <span class="str">Basic dXNlcjpwYXNz</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 3: Flujo + Cabeceras comunes -->
+  <div class="section">
+    <div class="grid-2" style="align-items:start">
+
+      <!-- FLUJO REQUEST -->
+      <div class="card">
+        <div class="accent-bar" style="background: linear-gradient(90deg,#5b82ff,#18c9a9)"></div>
+        <h3>Ciclo de vida de una petición</h3>
+        <div class="flow">
+          <div class="flow-step">
+            <span class="fs-icon">🖥</span>
+            <span class="fs-name">Cliente</span>
+            <span class="fs-sub">App / Browser</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <span class="fs-icon">🔒</span>
+            <span class="fs-name">Auth</span>
+            <span class="fs-sub">Token / Key</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <span class="fs-icon">🌐</span>
+            <span class="fs-name">Gateway</span>
+            <span class="fs-sub">Rate limit</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <span class="fs-icon">⚙️</span>
+            <span class="fs-name">Servidor</span>
+            <span class="fs-sub">Lógica</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <span class="fs-icon">🗄</span>
+            <span class="fs-name">Base de datos</span>
+            <span class="fs-sub">Datos</span>
+          </div>
+        </div>
+        <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+          <div style="height:1px;flex:1;background:var(--border2)"></div>
+          <span style="font-size:10px;color:var(--muted)">respuesta</span>
+          <div style="height:1px;flex:1;background:var(--border2)"></div>
+        </div>
+
+        <!-- Principios REST -->
+        <div style="margin-top:12px">
+          <div class="section-title" style="margin-bottom:8px">Principios REST (Richardson Maturity)</div>
+          <div class="pillars">
+            <div class="pillar">
+              <div class="pillar-icon">🔗</div>
+              <div class="pillar-name">Recursos URI</div>
+              <div class="pillar-desc">Sustantivos, no verbos</div>
+            </div>
+            <div class="pillar">
+              <div class="pillar-icon">📡</div>
+              <div class="pillar-name">Métodos HTTP</div>
+              <div class="pillar-desc">GET/POST/PUT/DELETE</div>
+            </div>
+            <div class="pillar">
+              <div class="pillar-icon">🔀</div>
+              <div class="pillar-name">HATEOAS</div>
+              <div class="pillar-desc">Links en respuesta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CABECERAS COMUNES -->
+      <div class="card">
+        <div class="accent-bar" style="background: linear-gradient(90deg,#9b6bff,#ff6b60)"></div>
+        <h3>Cabeceras (Headers) comunes</h3>
+
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5b82ff;margin-bottom:7px">Request</div>
+        <div class="header-row" style="font-size:10px;font-weight:700;color:var(--muted);padding-bottom:4px;border-bottom:1px solid var(--border2)">
+          <span>Cabecera</span><span>Descripción</span>
+        </div>
+        <div class="header-row"><span class="header-name">Authorization</span><span class="header-desc">Token de autenticación</span></div>
+        <div class="header-row"><span class="header-name">Content-Type</span><span class="header-desc">Tipo de cuerpo enviado</span></div>
+        <div class="header-row"><span class="header-name">Accept</span><span class="header-desc">Tipo esperado en respuesta</span></div>
+        <div class="header-row"><span class="header-name">X-Request-ID</span><span class="header-desc">ID único para trazabilidad</span></div>
+        <div class="header-row"><span class="header-name">If-None-Match</span><span class="header-desc">ETag para caché condicional</span></div>
+
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#18c9a9;margin:12px 0 7px">Response</div>
+        <div class="header-row"><span class="header-name">Content-Type</span><span class="header-desc">Tipo de la respuesta</span></div>
+        <div class="header-row"><span class="header-name">Cache-Control</span><span class="header-desc">Política de caché</span></div>
+        <div class="header-row"><span class="header-name">ETag</span><span class="header-desc">Versión del recurso</span></div>
+        <div class="header-row"><span class="header-name">X-RateLimit-*</span><span class="header-desc">Límites de uso restantes</span></div>
+        <div class="header-row"><span class="header-name">Location</span><span class="header-desc">URL del recurso creado (201)</span></div>
+        <div class="header-row"><span class="header-name">Access-Control-*</span><span class="header-desc">Política CORS</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 4: REST vs GraphQL + Buenas practicas + Paginación -->
+  <div class="section">
+    <div class="grid-3" style="align-items:start">
+
+      <!-- REST vs GraphQL -->
+      <div class="card">
+        <div class="accent-bar" style="background: linear-gradient(90deg,#5b82ff,#9b6bff)"></div>
+        <h3>REST vs GraphQL</h3>
+        <div class="compare-header">
+          <span style="color:#5b82ff">REST</span>
+          <span style="color:#9b6bff">GraphQL</span>
+        </div>
+        <div class="compare-row">
+          <span class="compare-rest">Múltiples endpoints</span>
+          <span class="compare-gql">Un solo endpoint</span>
+        </div>
+        <div class="compare-row">
+          <span class="compare-rest">Datos fijos por ruta</span>
+          <span class="compare-gql">Consulta exacta</span>
+        </div>
+        <div class="compare-row">
+          <span class="compare-rest">Over/Under-fetching</span>
+          <span class="compare-gql">Solo lo necesario</span>
+        </div>
+        <div class="compare-row">
+          <span class="compare-rest">Cacheable por HTTP</span>
+          <span class="compare-gql">Caché compleja</span>
+        </div>
+        <div class="compare-row">
+          <span class="compare-rest">Fácil de empezar</span>
+          <span class="compare-gql">Schema + resolvers</span>
+        </div>
+        <div class="compare-row">
+          <span class="compare-rest">Sin tipado propio</span>
+          <span class="compare-gql">Tipado estricto</span>
+        </div>
+        <div style="margin-top:10px">
+          <div class="code" style="font-size:10.5px"><span class="cmt"># GraphQL — pide lo que necesitas</span>
+<span class="kw">query</span> {
+  usuario(id: <span class="num">42</span>) {
+    nombre
+    pedidos { total }
+  }
+}</div>
+        </div>
+      </div>
+
+      <!-- PAGINACIÓN -->
+      <div class="card">
+        <div class="accent-bar" style="background: linear-gradient(90deg,#4dd0ff,#ff6b60)"></div>
+        <h3>Paginación &amp; Filtros</h3>
+
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#4dd0ff;margin-bottom:7px">Offset / Limit</div>
+        <div class="code" style="margin-bottom:10px;font-size:10.5px"><span class="kw">GET</span> /productos?<span class="key">pagina</span>=<span class="num">2</span>&amp;<span class="key">limite</span>=<span class="num">20</span>
+
+{
+  <span class="key">"total"</span><span class="op">:</span> <span class="num">340</span><span class="op">,</span>
+  <span class="key">"pagina"</span><span class="op">:</span> <span class="num">2</span><span class="op">,</span>
+  <span class="key">"datos"</span><span class="op">:</span> [...]
+}</div>
+
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#4dd0ff;margin-bottom:7px">Cursor (recomendado)</div>
+        <div class="code" style="margin-bottom:10px;font-size:10.5px"><span class="kw">GET</span> /productos?<span class="key">cursor</span>=<span class="str">eyJpZCI6NX0</span>
+
+{
+  <span class="key">"siguiente"</span><span class="op">:</span> <span class="str">"eyJpZCI6MTB9"</span><span class="op">,</span>
+  <span class="key">"datos"</span><span class="op">:</span> [...]
+}</div>
+
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#4dd0ff;margin-bottom:7px">Filtros y ordenación</div>
+        <div class="code" style="font-size:10.5px"><span class="kw">GET</span> /productos
+  ?<span class="key">categoria</span>=<span class="str">ropa</span>
+  &amp;<span class="key">precio_max</span>=<span class="num">100</span>
+  &amp;<span class="key">ordenar</span>=<span class="str">precio_asc</span></div>
+      </div>
+
+      <!-- BUENAS PRÁCTICAS -->
+      <div class="card">
+        <div class="accent-bar" style="background: linear-gradient(90deg,#18c9a9,#5b82ff)"></div>
+        <h3>Buenas prácticas</h3>
+
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:8px;font-size:11.5px;align-items:flex-start">
+            <span style="color:#18c9a9;font-size:13px;flex-shrink:0;margin-top:1px">✓</span>
+            <span style="color:#aab2c6">Usa <strong style="color:var(--text)">sustantivos</strong> en plural para recursos: <code style="font-family:var(--mono);font-size:10.5px;color:#5b82ff">/usuarios</code> no <code style="font-family:var(--mono);font-size:10.5px;color:#ff6b60">/getUsuario</code></span>
+          </div>
+          <div style="display:flex;gap:8px;font-size:11.5px;align-items:flex-start">
+            <span style="color:#18c9a9;font-size:13px;flex-shrink:0;margin-top:1px">✓</span>
+            <span style="color:#aab2c6">Incluye siempre la <strong style="color:var(--text)">versión</strong> en la URL: <code style="font-family:var(--mono);font-size:10.5px;color:#5b82ff">/v1/</code></span>
+          </div>
+          <div style="display:flex;gap:8px;font-size:11.5px;align-items:flex-start">
+            <span style="color:#18c9a9;font-size:13px;flex-shrink:0;margin-top:1px">✓</span>
+            <span style="color:#aab2c6">Usa el <strong style="color:var(--text)">código de estado correcto</strong>, no siempre 200</span>
+          </div>
+          <div style="display:flex;gap:8px;font-size:11.5px;align-items:flex-start">
+            <span style="color:#18c9a9;font-size:13px;flex-shrink:0;margin-top:1px">✓</span>
+            <span style="color:#aab2c6">Devuelve <strong style="color:var(--text)">errores claros</strong> con campo <code style="font-family:var(--mono);font-size:10.5px;color:#ff6b60">mensaje</code></span>
+          </div>
+          <div style="display:flex;gap:8px;font-size:11.5px;align-items:flex-start">
+            <span style="color:#18c9a9;font-size:13px;flex-shrink:0;margin-top:1px">✓</span>
+            <span style="color:#aab2c6">Implementa <strong style="color:var(--text)">rate limiting</strong> y exponential backoff</span>
+          </div>
+          <div style="display:flex;gap:8px;font-size:11.5px;align-items:flex-start">
+            <span style="color:#18c9a9;font-size:13px;flex-shrink:0;margin-top:1px">✓</span>
+            <span style="color:#aab2c6">Usa siempre <strong style="color:var(--text)">HTTPS</strong> en producción</span>
+          </div>
+          <div style="display:flex;gap:8px;font-size:11.5px;align-items:flex-start">
+            <span style="color:#18c9a9;font-size:13px;flex-shrink:0;margin-top:1px">✓</span>
+            <span style="color:#aab2c6">Documenta con <strong style="color:var(--text)">OpenAPI / Swagger</strong></span>
+          </div>
+          <div style="display:flex;gap:8px;font-size:11.5px;align-items:flex-start">
+            <span style="color:#ff6b60;font-size:13px;flex-shrink:0;margin-top:1px">✗</span>
+            <span style="color:#aab2c6">No expongas <strong style="color:var(--text)">IDs secuenciales</strong> predecibles</span>
+          </div>
+          <div style="display:flex;gap:8px;font-size:11.5px;align-items:flex-start">
+            <span style="color:#ff6b60;font-size:13px;flex-shrink:0;margin-top:1px">✗</span>
+            <span style="color:#aab2c6">No guardes datos sensibles en <strong style="color:var(--text)">query params</strong> (logs)</span>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="section-title" style="margin-bottom:6px">Content-Type más usados</div>
+          <div class="chip-row">
+            <span class="chip chip-hl">application/json</span>
+            <span class="chip">multipart/form-data</span>
+            <span class="chip">application/xml</span>
+            <span class="chip">text/plain</span>
+            <span class="chip chip-hl">application/octet-stream</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>// APIs Cheat Sheet</span>
+    <span>REST · HTTP · Auth · GraphQL · <span>Status Codes</span></span>
+    <span>2026</span>
+  </footer>
+
+</div>
+</body>
+</html>

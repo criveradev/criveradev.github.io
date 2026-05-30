@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ============================================= -->
+  <!-- EDITA: el título que aparece en la pestaña    -->
+  <!-- ============================================= -->
+  <title>Welcome</title>
+
+  <!-- Favicon (icono de la pestaña) -->
+  <link rel="icon" type="image/svg+xml" href="assets/ico/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/ico/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/ico/favicon-180.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+  <div class="mesh">
+    <div class="blob a"></div>
+    <div class="blob b"></div>
+    <div class="blob c"></div>
+  </div>
+  <div class="grain"></div>
+
+  <!-- ===================== NAV ===================== -->
+  <nav>
+    <div class="wrap">
+      <!-- EDITA: tus iniciales o nombre corto -->
+      <div class="logo"><span>{criveradev}</span></div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#sobre-mi">Sobre mí</a></li>
+        <li><a href="#formacion">Formación</a></li>
+        <li><a href="#certificaciones">Certificaciones</a></li>
+        <li><a href="#proyectos">Proyectos</a></li>
+        <li><a href="#experiencia">Experiencia</a></li>
+        <li class="dropdown" id="recursosDropdown">
+          <button class="dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+            Recursos
+            <svg class="caret" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <!-- EDITA: añade aquí más enlaces a medida que crees páginas -->
+          <ul class="dropdown-menu">
+            <li><a href="recursos/apis.html">Cheat Sheet de APIs</a></li>
+            <!-- Ejemplo para futuras páginas (copia y descomenta):
+            <li><a href="recursos/git.html">Comandos de Git</a></li>
+            <li><a href="recursos/css.html">Trucos de CSS</a></li>
+            -->
+          </ul>
+        </li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero">
+    <div class="wrap">
+      <div class="reveal"><span class="pill"><span class="dot"></span> Disponible para nuevos proyectos</span></div>
+      <!-- EDITA: tu nombre. La palabra entre <em></em> se pinta de colores -->
+      <h1 class="reveal">Hola, soy <em>Claudio Rivera Bravo</em><br>Backend Developer</h1>
+      <!-- EDITA: una frase breve sobre ti -->
+      <p class="lead reveal">Desarrollo sistemas backend eficientes y escalables,
+        convirtiendo lógica compleja en arquitecturas claras y mantenibles.
+        Me enfoco en APIs sólidas, buen rendimiento y código confiable.</p>
+      <div class="cta-row reveal">
+        <a href="#proyectos" class="btn btn-primary">Ver proyectos →</a>
+        <a href="#contacto" class="btn btn-ghost">Contáctame</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== SOBRE MÍ ===================== -->
+  <section id="sobre-mi">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="sec-tag">// 01 — Sobre mí</div>
+        <h2>Un poco sobre quién soy</h2>
+      </div>
+      <div class="about-grid">
+        <div class="reveal about-intro">
+          <!-- EDITA: cambia la ruta src por tu foto en assets/images/ -->
+          <div class="avatar-wrap">
+            <img class="avatar" src="assets/images/perfil.jpg" alt="Foto de perfil"
+              onerror="this.classList.add('avatar-empty');this.removeAttribute('src');" />
+          </div>
+          <div class="about-bio">
+            <!-- EDITA: tu descripción personal -->
+            <p style="text-align: justify;">
+              Ingeniero en informática con mención en desarrollo de sistemas, especializado en backend y arquitectura de
+              servicios. Desarrollo APIs y microservicios aplicando principios SOLID, DDD, arquitectura hexagonal y
+              patrones de integración. Tengo experiencia trabajando con bases de datos SQL/NoSQL, optimización de
+              consultas, caching distribuido y mensajería asíncrona. Implemento pipelines CI/CD, contenedorización con
+              Docker y despliegues automatizados. Priorizo la escalabilidad, la resiliencia, la observabilidad (logs,
+              métricas, tracing) y la calidad del código mediante testing y buenas prácticas de ingeniería.
+            </p>
+          </div>
+        </div>
+
+        <div class="reveal about-extra">
+          <div>
+            <h3 style="font-family:'Bricolage Grotesque';font-weight:800;margin:0 0 14px;">Stack y herramientas</h3>
+            <!-- EDITA: tus tecnologías -->
+
+
+            <div class="skills reveal">
+              <a class="clink" href="https://www.python.org" target="_blank">
+                <i class="fa-brands fa-python"></i> Python
+              </a>
+
+              <a class="clink" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
+                <i class="fa-brands fa-js"></i> JavaScript
+              </a>
+
+              <a class="clink" href="https://www.java.com" target="_blank">
+                <i class="fa-brands fa-java"></i> Java
+              </a>
+
+              <a class="clink" href="https://www.php.net" target="_blank">
+                <i class="fa-brands fa-php"></i> PHP
+              </a>
+
+              <a class="clink" href="https://www.djangoproject.com" target="_blank">
+                <i class="fa-solid fa-leaf"></i> Django
+              </a>
+
+              <a class="clink" href="https://nodejs.org" target="_blank">
+                <i class="fa-brands fa-node-js"></i> Node.js
+              </a>
+
+              <a class="clink" href="https://spring.io/projects/spring-boot" target="_blank">
+                <i class="fa-solid fa-seedling"></i> Spring Boot
+              </a>
+
+              <a class="clink" href="https://laravel.com" target="_blank">
+                <i class="fa-brands fa-laravel"></i> Laravel
+              </a>
+
+              <a class="clink" href="https://www.postgresql.org" target="_blank">
+                <i class="fa-solid fa-database"></i> PostgreSQL
+              </a>
+
+              <a class="clink" href="https://www.mongodb.com" target="_blank">
+                <i class="fa-solid fa-leaf"></i> MongoDB
+              </a>
+
+              <a class="clink" href="https://www.docker.com" target="_blank">
+                <i class="fa-brands fa-docker"></i> Docker
+              </a>
+
+              <a class="clink" href="https://git-scm.com" target="_blank">
+                <i class="fa-brands fa-git-alt"></i> Git
+              </a>
+
+              </a>
+
+
+
+            </div>
+
+            <!--<div class="skills">
+              <span class="chip">Python</span>
+              <span class="chip">Java</span>
+              <span class="chip">PHP</span>
+              <span class="chip">JavaScript</span>
+              <span class="chip">Node.js</span>
+              <span class="chip">SQL</span>
+              <span class="chip">Git</span>
+              <span class="chip">Tailwind</span>
+            </div>-->
+          </div>
+          <div class="stat-card">
+            <!-- EDITA: tus números -->
+            <div class="stat"><b class="c1">3+</b><span>años de experiencia escribiendo código</span></div>
+            <div class="stat"><b class="c2">20+</b><span>proyectos completados</span></div>
+            <div class="stat"><b class="c3">∞</b><span>ganas de seguir aprendiendo</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FORMACIÓN ACADÉMICA ===================== -->
+  <section id="formacion">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="sec-tag">// 02 — Formación académica</div>
+        <h2>Estudios y formación</h2>
+      </div>
+      <div class="edu-grid">
+        <!-- EDITA cada estudio (copia un bloque .edu-card para añadir más) -->
+        <article class="edu-card reveal">
+          <div class="edu-icon">🎓</div>
+          <div class="edu-date">2018 — 2023</div>
+          <h3>Título o carrera</h3>
+          <div class="edu-org">Universidad o institución</div>
+          <p>Mención, especialización o detalle relevante de tus estudios.</p>
+        </article>
+
+        <article class="edu-card reveal">
+          <div class="edu-icon">📚</div>
+          <div class="edu-date">2023</div>
+          <h3>Bootcamp o curso</h3>
+          <div class="edu-org">Academia o plataforma</div>
+          <p>Programa intensivo, diplomado o formación complementaria.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CERTIFICACIONES (Credly) ===================== -->
+  <section id="certificaciones">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="sec-tag">// 03 — Certificaciones</div>
+        <h2>Certificaciones &amp; insignias</h2>
+      </div>
+
+      <p class="cert-intro reveal">Insignias digitales verificadas. Haz clic en cualquiera para ver su credencial en
+        Credly.</p>
+
+      <div class="cert-grid reveal">
+        <!--
+          EDITA: para cada insignia de Credly haz lo siguiente:
+          1. Entra a tu insignia en credly.com y pulsa "Share" → "Download badge"
+             (o copia la URL de la imagen del badge).
+          2. Guarda la imagen en assets/images/ (ej: badge-aws.png)
+          3. En href pega el enlace público de tu insignia en Credly.
+          Copia un bloque <a class="cert-badge"> por cada certificación.
+        -->
+        <a class="cert-badge" href="https://www.credly.com/badges/ddd737b5-6384-4f6b-8632-843b1f4f3e97/public_url"
+          target="_blank" rel="noopener">
+          <img src="assets/badges/scrum-foundation-professional-certification.png" alt="Certificación"
+            onerror="this.classList.add('badge-empty');this.removeAttribute('src');" />
+          <span>Scrum Foundation Professional Certification - SFPC™</span>
+        </a>
+
+        <a class="cert-badge" href="https://www.credly.com/users/criveradev" target="_blank" rel="noopener">
+          <img src="assets/images/badge-2.png" alt="Certificación"
+            onerror="this.classList.add('badge-empty');this.removeAttribute('src');" />
+          <span>Nombre de la certificación</span>
+        </a>
+
+        <a class="cert-badge" href="https://www.credly.com/users/criveradev" target="_blank" rel="noopener">
+          <img src="assets/images/badge-3.png" alt="Certificación"
+            onerror="this.classList.add('badge-empty');this.removeAttribute('src');" />
+          <span>Nombre de la certificación</span>
+        </a>
+
+        <a class="cert-badge" href="https://www.credly.com/users/tu-usuario" target="_blank" rel="noopener">
+          <img src="assets/images/badge-4.png" alt="Certificación"
+            onerror="this.classList.add('badge-empty');this.removeAttribute('src');" />
+          <span>Nombre de la certificación</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROYECTOS ===================== -->
+  <section id="proyectos">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="sec-tag">// 04 — Portafolio</div>
+        <h2>Proyectos seleccionados</h2>
+      </div>
+      <div class="proj-grid">
+        <!-- EDITA cada proyecto (copia/pega un bloque .proj para añadir más) -->
+        <article class="proj reveal">
+          <div class="proj-thumb" onclick="openLightbox('assets/images/devlog-screenshot.png', 'Devlog')">
+            <img src="assets/images/devlog-screenshot.png" alt="Captura de Devlog" loading="lazy" />
+            <div class="proj-thumb-overlay"><span>🔍 Ver captura</span></div>
+          </div>
+          <h3>Devlog</h3>
+          <p>Una aplicación web completa donde los usuarios pueden publicar contenido, interactuar con otros y construir
+            su red de seguidores.</p>
+          <div class="tags"><span>MongoDB</span><span>Express.js</span><span>React</span><span>Node.js</span></div>
+          <div class="proj-links">
+            <a href="https://red-social-kappa.vercel.app/login" target="_blank">Ver demo</a>
+            <a href="https://github.com/criveradev/Devlog" target="_blank">Código</a>
+          </div>
+        </article>
+
+        <article class="proj reveal">
+          <h3>Nombre del Proyecto</h3>
+          <p>Breve descripción de qué hace, qué problema resuelve y tu rol en él.</p>
+          <div class="tags"><span>JavaScript</span><span>CSS</span></div>
+          <div class="proj-links">
+            <a href="#" target="_blank">Ver demo</a>
+            <a href="#" target="_blank">Código</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== EXPERIENCIA / CV ===================== -->
+  <section id="experiencia">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="sec-tag">// 05 — Trayectoria</div>
+        <h2>Experiencia profesional</h2>
+      </div>
+      <div class="timeline">
+        <!-- EDITA cada entrada -->
+        <div class="tl-item reveal">
+          <div class="tl-date">2024 — Actualidad</div>
+          <h3>Cargo o puesto</h3>
+          <div class="org">Empresa / Organización</div>
+          <p>Describe tus responsabilidades y logros principales en este rol.</p>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-date">2022 — 2024</div>
+          <h3>Cargo anterior</h3>
+          <div class="org">Empresa / Organización</div>
+          <p>Describe tus responsabilidades y logros principales en este rol.</p>
+        </div>
+      </div>
+      <!-- EDITA: enlaza tu CV en PDF (puedes subirlo al mismo repo) -->
+      <div style="margin-top:40px" class="reveal">
+        <a href="cv.pdf" class="btn btn-ghost" target="_blank">Descargar CV (PDF) ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACTO ===================== -->
+  <section id="contacto" class="contact">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="sec-tag" style="display:inline-block">// 06 — Contacto</div>
+        <h2>¿Trabajamos <em
+            style="font-style:normal;background:linear-gradient(110deg,var(--blue),var(--teal) 55%,#4dd0ff);-webkit-background-clip:text;background-clip:text;color:transparent">juntos?</em>
+        </h2>
+      </div>
+      <p class="lead reveal">Estoy abierto a nuevas oportunidades y colaboraciones. Escríbeme y conversemos.</p>
+      <!-- EDITA: tus enlaces reales -->
+      <div class="contact-links reveal">
+        <a class="clink" href="mailto:bravoriveraclaudio@outlook.com">
+          <i class="fa-solid fa-envelope"></i> Correo
+        </a>
+
+        <a class="clink" href="https://github.com/criveradev" target="_blank">
+          <i class="fa-brands fa-github"></i> GitHub
+        </a>
+
+        <a class="clink" href="https://linkedin.com/in/criveradev" target="_blank">
+          <i class="fa-brands fa-linkedin"></i> LinkedIn
+        </a>
+
+        <a class="clink" href="https://wa.me/56934928943" target="_blank">
+          <i class="fa-brands fa-whatsapp"></i> Whatsapp
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <!-- EDITA: tu nombre y el año -->
+    <div class="wrap">© 2026 {criveradev} · Hecho con código y café ☕</div>
+  </footer>
+
+
+  <script src="js/main.js"></script>
+
+  <!-- Lightbox -->
+  <div id="lightbox" onclick="closeLightbox()"
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px);">
+    <button onclick="closeLightbox()"
+      style="position:absolute;top:20px;right:28px;background:none;border:none;color:#fff;font-size:2rem;cursor:pointer;line-height:1;">&#x2715;</button>
+    <img id="lightbox-img" src="" alt=""
+      style="max-width:90vw;max-height:88vh;border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.6);object-fit:contain;" />
+  </div>
+  <script>
+    function openLightbox(src, alt) {
+      const lb = document.getElementById('lightbox');
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox-img').alt = alt;
+      lb.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  </script>
+</body>
+
+</html>
