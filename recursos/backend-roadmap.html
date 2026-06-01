@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Backend Roadmap — Cheat Sheet</title>
+<link rel="icon" type="image/svg+xml" href="../assets/ico/favicon.svg"/>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/ico/favicon-32.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:       #0f1320;
+    --surface:  #161b29;
+    --surface2: #1c2233;
+    --border:   rgba(255,255,255,.10);
+    --border2:  rgba(255,255,255,.16);
+
+    --blue:   #5b82ff;
+    --teal:   #18c9a9;
+    --cyan:   #4dd0ff;
+    --purple: #9b6bff;
+    --red:    #ff6b60;
+    --yellow: #f5c842;
+
+    --text:   #e8ecf3;
+    --muted:  #8e96ab;
+    --accent: #5b82ff;
+
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Hanken Grotesk', sans-serif;
+    --display: 'Bricolage Grotesque', sans-serif;
+
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 32px 24px 48px;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── FONDO ANIMADO ─── */
+  .mesh { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .3; animation: float 18s ease-in-out infinite; }
+  .blob.a { width: 520px; height: 520px; background: var(--blue);   top: -120px; left: -80px; }
+  .blob.b { width: 460px; height: 460px; background: var(--teal);   top: 30%; right: -120px; animation-delay: -6s; }
+  .blob.c { width: 400px; height: 400px; background: var(--purple); bottom: -100px; left: 20%; animation-delay: -11s; }
+  @keyframes float {
+    0%,100% { transform: translate(0,0) scale(1); }
+    33%      { transform: translate(40px,-50px) scale(1.1); }
+    66%      { transform: translate(-30px,40px) scale(.95); }
+  }
+  .grain {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ─── LAYOUT ─── */
+  .sheet { max-width: 1100px; margin: 0 auto; }
+
+  /* ─── HEADER ─── */
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 20px;
+  }
+  header h1 {
+    font-family: var(--display);
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    color: var(--text);
+  }
+  header h1 span {
+    background: linear-gradient(110deg, var(--blue), var(--teal) 55%, var(--cyan));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  header p { font-size: 13px; color: var(--muted); font-family: var(--mono); }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    height: 100%;
+    transition: transform .2s, box-shadow .2s, border-color .2s;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(0,0,0,.45);
+    border-color: rgba(255,255,255,.16);
+  }
+  .card h3 {
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -.2px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  /* ─── GRIDS ─── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+  .col-span-2 { grid-column: span 2; }
+  .col-span-3 { grid-column: span 3; }
+  .section { margin-bottom: 22px; }
+
+  /* ─── ACCENT BAR ─── */
+  .accent-bar { height: 4px; border-radius: 2px; margin-bottom: 12px; }
+
+  /* ─── STEP BADGE ─── */
+  .step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ─── CHIP TAGS ─── */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--muted);
+  }
+  .chip-blue   { color: var(--blue);   border-color: #5b82ff40; background: #5b82ff10; }
+  .chip-teal   { color: var(--teal);   border-color: #18c9a940; background: #18c9a910; }
+  .chip-cyan   { color: var(--cyan);   border-color: #4dd0ff40; background: #4dd0ff10; }
+  .chip-purple { color: var(--purple); border-color: #9b6bff40; background: #9b6bff10; }
+  .chip-red    { color: var(--red);    border-color: #ff6b6040; background: #ff6b6010; }
+  .chip-yellow { color: var(--yellow); border-color: #f5c84240; background: #f5c84210; }
+
+  /* ─── ITEM LIST ─── */
+  .item-list { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
+  .item-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    font-size: 12px;
+    color: #aab2c6;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .item-row:last-child { border-bottom: none; }
+  .item-dot { color: var(--teal); font-size: 10px; margin-top: 2px; flex-shrink: 0; }
+
+  /* ─── FRAMEWORK BLOCKS ─── */
+  .fw-group { margin-bottom: 10px; }
+  .fw-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  /* ─── ROADMAP STEP ROW ─── */
+  .road-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .road-row:last-child { border-bottom: none; }
+  .road-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    min-width: 20px;
+    padding-top: 1px;
+  }
+  .road-title { font-weight: 700; color: var(--text); margin-bottom: 2px; font-size: 12px; }
+  .road-desc  { color: #aab2c6; font-size: 11px; }
+
+  /* ─── API ARCH CARDS ─── */
+  .arch-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 7px 9px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+  }
+  .arch-item:last-child { margin-bottom: 0; }
+  .arch-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin-top: 1px;
+  }
+  .arch-desc { font-size: 11px; color: #aab2c6; }
+
+  /* ─── CLOUD TABLE ─── */
+  .cloud-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .cloud-col {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+  }
+  .cloud-col-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+
+  /* ─── SECTION TITLE ─── */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    margin-top: 28px;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--mono);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer span { color: var(--accent); }
+
+  @media (max-width: 700px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .col-span-2, .col-span-3  { grid-column: span 1; }
+    .cloud-row                 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="mesh"><div class="blob a"></div><div class="blob b"></div><div class="blob c"></div></div>
+<div class="grain"></div>
+<div class="sheet">
+
+  <!-- VOLVER -->
+  <a href="../index.html" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--muted);text-decoration:none;margin-bottom:18px;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">← Volver al portafolio</a>
+
+  <!-- HEADER -->
+  <header>
+    <h1>Backend <span>Roadmap</span></h1>
+    <p>// Guía ordenada · 17 pasos · De cero a producción</p>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════
+       ROW 1: Lenguajes + HTTP + Paquetes
+  ══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="grid-3" style="align-items:start">
+
+      <!-- 1. LENGUAJE -->
+      <div class="card">
+        <div class="accent-bar" style="background:linear-gradient(90deg,var(--blue),var(--purple))"></div>
+        <h3><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">01</span>Lenguaje de programación</h3>
+        <div class="section-title" style="margin-bottom:6px">Opciones comunes</div>
+        <div class="chip-row" style="margin-top:0;margin-bottom:12px">
+          <span class="chip chip-yellow">JavaScript / TS</span>
+          <span class="chip chip-blue">Python</span>
+          <span class="chip chip-teal">Go</span>
+          <span class="chip">PHP</span>
+          <span class="chip">Ruby</span>
+          <span class="chip chip-red">Java</span>
+          <span class="chip">C#</span>
+          <span class="chip" style="color:var(--muted)">Rust</span>
+          <span class="chip" style="color:var(--muted)">Elixir</span>
+        </div>
+        <div class="section-title" style="margin-bottom:6px">Bases que debes dominar</div>
+        <div class="item-list">
+          <div class="item-row"><span class="item-dot">▸</span><span>Variables y tipos de datos</span></div>
+          <div class="item-row"><span class="item-dot">▸</span><span>Funciones y scope</span></div>
+          <div class="item-row"><span class="item-dot">▸</span><span>Estructuras de datos (listas, mapas, sets)</span></div>
+          <div class="item-row"><span class="item-dot">▸</span><span>Clases y objetos (POO)</span></div>
+          <div class="item-row"><span class="item-dot">▸</span><span>Módulos y paquetes</span></div>
+        </div>
+      </div>
+
+      <!-- 2. HTTP -->
+      <div class="card">
+        <div class="accent-bar" style="background:linear-gradient(90deg,var(--teal),var(--cyan))"></div>
+        <h3><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">02</span>Cómo funciona HTTP</h3>
+        <div class="item-list">
+          <div class="item-row"><span class="item-dot" style="color:var(--teal)">▸</span><span><strong style="color:var(--text)">Métodos</strong> — GET, POST, PUT, DELETE, PATCH</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--teal)">▸</span><span><strong style="color:var(--text)">Request / Response</strong> — estructura completa</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--teal)">▸</span><span><strong style="color:var(--text)">Status codes</strong> — 2xx, 3xx, 4xx, 5xx</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--teal)">▸</span><span><strong style="color:var(--text)">Headers</strong> — Content-Type, Authorization, etc.</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--teal)">▸</span><span><strong style="color:var(--text)">Cookies</strong> — sesiones y persistencia</span></div>
+        </div>
+        <div style="margin-top:12px;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm)">
+          <div style="font-size:10px;font-weight:700;color:var(--teal);margin-bottom:4px">💡 Tip</div>
+          <div style="font-size:11px;color:#aab2c6">Crea un servidor HTTP <strong style="color:var(--text)">desde cero</strong> sin frameworks. Es el mejor ejercicio para entender los fundamentos reales.</div>
+        </div>
+      </div>
+
+      <!-- 3. PAQUETES Y CLIENTES HTTP -->
+      <div class="card">
+        <div class="accent-bar" style="background:linear-gradient(90deg,var(--cyan),var(--blue))"></div>
+        <h3><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">03</span>Paquetes y clientes HTTP</h3>
+        <div class="section-title" style="margin-bottom:6px">Usos de los paquetes</div>
+        <div class="chip-row" style="margin-top:0;margin-bottom:12px">
+          <span class="chip">Manejo de red</span>
+          <span class="chip">Lectura de archivos</span>
+          <span class="chip">Soporte HTTP</span>
+          <span class="chip">Apps de consola</span>
+        </div>
+        <div class="section-title" style="margin-bottom:6px">Clientes HTTP para probar APIs</div>
+        <div class="item-list">
+          <div class="item-row"><span class="item-dot" style="color:var(--cyan)">▸</span><span><strong style="color:var(--text)">Postman</strong> — GUI completa con colecciones</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--cyan)">▸</span><span><strong style="color:var(--text)">Insomnia</strong> — alternativa minimalista</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--cyan)">▸</span><span><strong style="color:var(--text)">curl</strong> — desde terminal, muy potente</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--cyan)">▸</span><span><strong style="color:var(--text)">Thunder Client</strong> — dentro de VS Code</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--cyan)">▸</span><span><strong style="color:var(--text)">fetch / axios</strong> — desde el frontend</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       ROW 2: Frameworks + Arquitecturas de API
+  ══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="grid-3" style="align-items:start">
+
+      <!-- 4. FRAMEWORKS -->
+      <div class="card">
+        <div class="accent-bar" style="background:linear-gradient(90deg,var(--purple),var(--blue))"></div>
+        <h3><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">04</span>Frameworks backend</h3>
+
+        <div class="fw-group">
+          <div class="fw-label" style="color:var(--teal)">Minimalistas</div>
+          <div style="font-size:11px;color:#aab2c6;margin-bottom:6px">Tú defines la estructura. Más libertad, más responsabilidad.</div>
+          <div class="chip-row" style="margin-top:0">
+            <span class="chip chip-yellow">Express <span style="opacity:.6">Node.js</span></span>
+            <span class="chip chip-blue">Flask <span style="opacity:.6">Python</span></span>
+            <span class="chip chip-teal">Fiber <span style="opacity:.6">Go</span></span>
+          </div>
+        </div>
+
+        <div style="height:1px;background:var(--border);margin:12px 0"></div>
+
+        <div class="fw-group">
+          <div class="fw-label" style="color:var(--purple)">Opinionados</div>
+          <div style="font-size:11px;color:#aab2c6;margin-bottom:6px">Convenciones y herramientas listas. Más rápido para proyectos grandes.</div>
+          <div class="chip-row" style="margin-top:0">
+            <span class="chip chip-red">Laravel <span style="opacity:.6">PHP</span></span>
+            <span class="chip chip-blue">Django <span style="opacity:.6">Python</span></span>
+            <span class="chip chip-red">Ruby on Rails</span>
+            <span class="chip chip-purple">ASP.NET <span style="opacity:.6">C#</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. ARQUITECTURAS DE API -->
+      <div class="card col-span-2">
+        <div class="accent-bar" style="background:linear-gradient(90deg,var(--blue),var(--teal),var(--purple),var(--red))"></div>
+        <h3><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">05</span>Arquitecturas de APIs</h3>
+        <div class="grid-2" style="gap:8px;margin-top:4px">
+          <div>
+            <div class="arch-item">
+              <span class="arch-tag" style="background:#5b82ff20;color:var(--blue);border:1px solid #5b82ff40">REST</span>
+              <div class="arch-desc">Comunicación con JSON. La más común para web y mobile. Recursos en URL + verbos HTTP.</div>
+            </div>
+            <div class="arch-item">
+              <span class="arch-tag" style="background:#9b6bff20;color:var(--purple);border:1px solid #9b6bff40">GraphQL</span>
+              <div class="arch-desc">Consulta exacta de datos desde el cliente. Más flexible que REST, schema tipado estricto.</div>
+            </div>
+            <div class="arch-item">
+              <span class="arch-tag" style="background:#8e96ab20;color:#aab2c6;border:1px solid #8e96ab40">SOAP</span>
+              <div class="arch-desc">Basado en XML. Común en sistemas empresariales y gubernamentales. Más verboso.</div>
+            </div>
+          </div>
+          <div>
+            <div class="arch-item">
+              <span class="arch-tag" style="background:#18c9a920;color:var(--teal);border:1px solid #18c9a940">gRPC</span>
+              <div class="arch-desc">Comunicación binaria eficiente entre microservicios. Usa Protocol Buffers. Alta performance.</div>
+            </div>
+            <div class="arch-item">
+              <span class="arch-tag" style="background:#4dd0ff20;color:var(--cyan);border:1px solid #4dd0ff40">WebSockets</span>
+              <div class="arch-desc">Comunicación bidireccional en tiempo real. Ideal para chats, dashboards y notificaciones.</div>
+            </div>
+            <div class="arch-item" style="border-color:var(--border2);background:transparent">
+              <div style="font-size:11px;color:var(--muted)">💡 No necesitas dominarlas todas al inicio. Saber cuándo usar cada una es lo importante.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       ROW 3: Bases de datos SQL + ORM + NoSQL
+  ══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="grid-3" style="align-items:start">
+
+      <!-- 7. SQL -->
+      <div class="card">
+        <div class="accent-bar" style="background:linear-gradient(90deg,var(--blue),var(--cyan))"></div>
+        <h3><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">07</span>Bases de datos SQL</h3>
+        <div style="font-size:11.5px;color:#aab2c6;margin-bottom:10px">Empieza aquí. Una base sólida en SQL hace que todo lo demás sea más fácil.</div>
+        <div class="chip-row" style="margin-top:0;margin-bottom:12px">
+          <span class="chip chip-blue" style="font-size:11px">PostgreSQL ★</span>
+          <span class="chip">MySQL</span>
+          <span class="chip">MariaDB</span>
+          <span class="chip">SQLite</span>
+        </div>
+        <div class="section-title" style="margin-bottom:6px">Conceptos clave</div>
+        <div class="item-list">
+          <div class="item-row"><span class="item-dot" style="color:var(--blue)">▸</span><span>SELECT, INSERT, UPDATE, DELETE</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--blue)">▸</span><span>JOINs (INNER, LEFT, RIGHT, FULL)</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--blue)">▸</span><span>Índices y optimización de queries</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--blue)">▸</span><span>Transacciones y ACID</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--blue)">▸</span><span>Migraciones y esquemas</span></div>
+        </div>
+
+        <div style="margin-top:10px">
+          <div class="section-title" style="margin-bottom:6px">06 · Documentación de APIs</div>
+          <div class="chip-row" style="margin-top:0">
+            <span class="chip chip-teal">Swagger / OpenAPI</span>
+            <span class="chip">Postman</span>
+            <span class="chip">Insomnia</span>
+          </div>
+          <div style="font-size:11px;color:#aab2c6;margin-top:6px">Muchas herramientas generan docs automáticamente desde el código.</div>
+        </div>
+      </div>
+
+      <!-- 8. ORM -->
+      <div class="card">
+        <div class="accent-bar" style="background:linear-gradient(90deg,var(--teal),var(--blue))"></div>
+        <h3><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">08</span>ORMs</h3>
+        <div style="font-size:11.5px;color:#aab2c6;margin-bottom:10px">Interactúa con la base de datos usando código en vez de SQL puro.</div>
+
+        <div class="item-list">
+          <div class="item-row"><span class="item-dot" style="color:var(--teal)">▸</span><span><strong style="color:var(--text)">SQLAlchemy</strong> <span style="color:var(--muted)">— Python</span></span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--teal)">▸</span><span><strong style="color:var(--text)">TypeORM</strong> <span style="color:var(--muted)">— Node.js / TypeScript</span></span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--teal)">▸</span><span><strong style="color:var(--text)">Prisma</strong> <span style="color:var(--muted)">— Node.js, tipado excelente</span></span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--teal)">▸</span><span><strong style="color:var(--text)">Entity Framework</strong> <span style="color:var(--muted)">— C# / .NET</span></span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--teal)">▸</span><span><strong style="color:var(--text)">Eloquent</strong> <span style="color:var(--muted)">— Laravel / PHP</span></span></div>
+        </div>
+
+        <div style="margin-top:10px;padding:9px 11px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm)">
+          <div style="font-size:11px;color:#aab2c6"><span style="color:var(--yellow)">⚠</span> Los ORMs simplifican el desarrollo pero <strong style="color:var(--text)">no reemplazan</strong> conocer SQL. Entiende qué query genera por detrás.</div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="section-title" style="margin-bottom:6px">10 · Testing</div>
+          <div class="chip-row" style="margin-top:0;margin-bottom:6px">
+            <span class="chip chip-yellow">Jest <span style="opacity:.6">Node.js</span></span>
+            <span class="chip chip-blue">PHPUnit</span>
+            <span class="chip chip-red">JUnit <span style="opacity:.6">Java</span></span>
+            <span class="chip chip-blue">pytest</span>
+          </div>
+          <div class="chip-row" style="margin-top:0">
+            <span class="chip">Unit testing</span>
+            <span class="chip">Integration</span>
+            <span class="chip">End-to-end</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. NoSQL -->
+      <div class="card">
+        <div class="accent-bar" style="background:linear-gradient(90deg,var(--purple),var(--red))"></div>
+        <h3><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">09</span>Bases de datos NoSQL</h3>
+        <div style="font-size:11.5px;color:#aab2c6;margin-bottom:10px"><em>Not Only SQL</em> — almacenan datos en formatos flexibles (JSON, clave-valor, columnas, grafos).</div>
+
+        <div class="item-list">
+          <div class="item-row"><span class="item-dot" style="color:var(--purple)">▸</span><span><strong style="color:var(--text)">MongoDB</strong> — documentos JSON, muy popular</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--purple)">▸</span><span><strong style="color:var(--text)">Redis</strong> — clave-valor en memoria, ideal para caché</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--purple)">▸</span><span><strong style="color:var(--text)">Cassandra</strong> — columnar, alta disponibilidad</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--purple)">▸</span><span><strong style="color:var(--text)">DynamoDB</strong> — serverless, AWS nativo</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--purple)">▸</span><span><strong style="color:var(--text)">Firebase / Firestore</strong> — tiempo real, Google</span></div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="section-title" style="margin-bottom:6px">11 · Template Engines</div>
+          <div style="font-size:11px;color:#aab2c6;margin-bottom:6px">Para renderizar HTML desde el servidor: emails, reportes, SSR.</div>
+          <div class="chip-row" style="margin-top:0">
+            <span class="chip">Pug</span>
+            <span class="chip">Handlebars</span>
+            <span class="chip">EJS</span>
+            <span class="chip">Jinja2</span>
+            <span class="chip">Blade</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       ROW 4: Seguridad + Validaciones + Despliegue
+  ══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="grid-3" style="align-items:start">
+
+      <!-- 12+13. VALIDACIONES + SEGURIDAD -->
+      <div class="card col-span-2">
+        <div class="accent-bar" style="background:linear-gradient(90deg,var(--red),var(--purple),var(--blue))"></div>
+        <div class="grid-2" style="gap:16px">
+          <div>
+            <h3 style="margin-bottom:10px"><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">12</span>Validaciones</h3>
+            <div style="font-size:11.5px;color:#aab2c6;margin-bottom:8px">Nunca confíes en los datos del cliente. Valida siempre en servidor.</div>
+            <div class="item-list">
+              <div class="item-row"><span class="item-dot" style="color:var(--yellow)">▸</span><span><strong style="color:var(--text)">Joi / Express-Validator</strong> — Node.js</span></div>
+              <div class="item-row"><span class="item-dot" style="color:var(--yellow)">▸</span><span><strong style="color:var(--text)">Pydantic</strong> — Python / FastAPI</span></div>
+              <div class="item-row"><span class="item-dot" style="color:var(--yellow)">▸</span><span><strong style="color:var(--text)">Fluent Validation</strong> — C#</span></div>
+              <div class="item-row"><span class="item-dot" style="color:var(--yellow)">▸</span><span><strong style="color:var(--text)">Laravel Validator</strong> — PHP</span></div>
+            </div>
+          </div>
+          <div>
+            <h3 style="margin-bottom:10px"><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">13</span>Seguridad en APIs</h3>
+            <div class="item-list">
+              <div class="item-row"><span class="item-dot" style="color:var(--red)">▸</span><span><strong style="color:var(--text)">OWASP Top 10</strong> — vulnerabilidades comunes</span></div>
+              <div class="item-row"><span class="item-dot" style="color:var(--red)">▸</span><span><strong style="color:var(--text)">JWT</strong> — tokens firmados sin estado</span></div>
+              <div class="item-row"><span class="item-dot" style="color:var(--red)">▸</span><span><strong style="color:var(--text)">OAuth 2.0</strong> — autorización delegada</span></div>
+              <div class="item-row"><span class="item-dot" style="color:var(--red)">▸</span><span><strong style="color:var(--text)">Sesiones</strong> — autenticación stateful</span></div>
+              <div class="item-row"><span class="item-dot" style="color:var(--red)">▸</span><span><strong style="color:var(--text)">2FA / OTP</strong> — doble factor</span></div>
+              <div class="item-row"><span class="item-dot" style="color:var(--red)">▸</span><span>Rate limiting + HTTPS siempre</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14. DESPLIEGUE -->
+      <div class="card">
+        <div class="accent-bar" style="background:linear-gradient(90deg,var(--teal),var(--cyan))"></div>
+        <h3><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">14</span>Despliegue y nube</h3>
+
+        <div class="cloud-row">
+          <div class="cloud-col">
+            <div class="cloud-col-title" style="color:var(--teal)">PaaS — Empieza aquí</div>
+            <div class="item-list">
+              <div class="item-row" style="padding:3px 0"><span class="item-dot" style="color:var(--teal)">▸</span><span style="font-size:11px">Render</span></div>
+              <div class="item-row" style="padding:3px 0"><span class="item-dot" style="color:var(--teal)">▸</span><span style="font-size:11px">Railway</span></div>
+              <div class="item-row" style="padding:3px 0"><span class="item-dot" style="color:var(--teal)">▸</span><span style="font-size:11px">Fly.io</span></div>
+              <div class="item-row" style="padding:3px 0"><span class="item-dot" style="color:var(--teal)">▸</span><span style="font-size:11px">Vercel / Netlify</span></div>
+            </div>
+          </div>
+          <div class="cloud-col">
+            <div class="cloud-col-title" style="color:var(--blue)">IaaS — Más control</div>
+            <div class="item-list">
+              <div class="item-row" style="padding:3px 0"><span class="item-dot" style="color:var(--blue)">▸</span><span style="font-size:11px">AWS</span></div>
+              <div class="item-row" style="padding:3px 0"><span class="item-dot" style="color:var(--blue)">▸</span><span style="font-size:11px">Google Cloud</span></div>
+              <div class="item-row" style="padding:3px 0"><span class="item-dot" style="color:var(--blue)">▸</span><span style="font-size:11px">Azure</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#aab2c6">VPS · Logs · Monitoreo · Almacenamiento</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       ROW 5: Docker + Servicios Cloud + Arquitectura avanzada
+  ══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="grid-3" style="align-items:start">
+
+      <!-- 15. DOCKER -->
+      <div class="card">
+        <div class="accent-bar" style="background:linear-gradient(90deg,var(--cyan),var(--blue))"></div>
+        <h3><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">15</span>Docker y contenedores</h3>
+        <div style="font-size:11.5px;color:#aab2c6;margin-bottom:10px">Aísla tu app en un entorno reproducible. Mismo comportamiento en dev y producción.</div>
+        <div class="item-list">
+          <div class="item-row"><span class="item-dot" style="color:var(--cyan)">▸</span><span><strong style="color:var(--text)">Docker</strong> — imagen + contenedor</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--cyan)">▸</span><span><strong style="color:var(--text)">Docker Compose</strong> — múltiples servicios</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--cyan)">▸</span><span><strong style="color:var(--text)">Kubernetes</strong> — orquestación a escala</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--cyan)">▸</span><span><strong style="color:var(--text)">Docker Swarm</strong> — alternativa a k8s</span></div>
+        </div>
+        <div style="margin-top:10px;padding:9px 11px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm)">
+          <div style="font-size:11px;color:#aab2c6"><span style="color:var(--cyan)">ℹ</span> No es obligatorio al inicio, pero <strong style="color:var(--text)">tarde o temprano lo vas a necesitar</strong>.</div>
+        </div>
+      </div>
+
+      <!-- 16. SERVICIOS CLOUD -->
+      <div class="card">
+        <div class="accent-bar" style="background:linear-gradient(90deg,var(--purple),var(--blue))"></div>
+        <h3><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">16</span>Servicios adicionales</h3>
+        <div style="font-size:11.5px;color:#aab2c6;margin-bottom:10px">Integraciones comunes en proyectos reales.</div>
+        <div class="item-list">
+          <div class="item-row"><span class="item-dot" style="color:var(--purple)">▸</span><span><strong style="color:var(--text)">BD administradas</strong> — RDS, Atlas, Redis Cloud</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--purple)">▸</span><span><strong style="color:var(--text)">Secret Managers</strong> — variables de entorno seguras</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--purple)">▸</span><span><strong style="color:var(--text)">Auth services</strong> — Auth0, Firebase Auth, Cognito</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--purple)">▸</span><span><strong style="color:var(--text)">Caché</strong> — Redis, Memcached</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--purple)">▸</span><span><strong style="color:var(--text)">Colas y jobs</strong> — RabbitMQ, Kafka, SQS</span></div>
+        </div>
+      </div>
+
+      <!-- 17. ARQUITECTURA AVANZADA -->
+      <div class="card">
+        <div class="accent-bar" style="background:linear-gradient(90deg,var(--red),var(--yellow))"></div>
+        <h3><span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:400;margin-right:6px">17</span>Nivel avanzado</h3>
+        <div style="font-size:11.5px;color:#aab2c6;margin-bottom:10px">Temas que aparecen a medida que creces como backend dev.</div>
+        <div class="item-list">
+          <div class="item-row"><span class="item-dot" style="color:var(--yellow)">▸</span><span><strong style="color:var(--text)">Monolitos vs microservicios</strong></span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--yellow)">▸</span><span><strong style="color:var(--text)">API Gateway</strong> — punto de entrada único</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--yellow)">▸</span><span><strong style="color:var(--text)">Proxy servers</strong> — Nginx, Traefik</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--yellow)">▸</span><span><strong style="color:var(--text)">Serverless</strong> — funciones sin servidor</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--yellow)">▸</span><span><strong style="color:var(--text)">Cron jobs</strong> — tareas programadas</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--yellow)">▸</span><span><strong style="color:var(--text)">Procesamiento asíncrono</strong> y colas</span></div>
+          <div class="item-row"><span class="item-dot" style="color:var(--yellow)">▸</span><span><strong style="color:var(--text)">System Design</strong> — diseño a gran escala</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>// Backend Roadmap</span>
+    <span>Lenguajes · HTTP · Bases de datos · Seguridad · Despliegue · <span>Arquitectura</span></span>
+    <span>2026</span>
+  </footer>
+
+</div>
+</body>
+</html>
